@@ -1,0 +1,144 @@
+import turtle
+
+screen=turtle.Screen()
+screen.bgcolor("dark green")
+screen.addshape("sphere.gif")
+screen.bgcolor("black")
+screen.bgpic("Grid.gif")
+screen.tracer(0)
+
+     
+boundary=turtle.Turtle()
+boundary.pencolor("white")
+boundary.speed(0)
+boundary.pu()
+boundary.goto(-200,200)
+boundary.pd()
+for i in range(4):
+    boundary.fd(400)
+    boundary.rt(90)
+boundary.ht()
+
+player=turtle.Turtle()
+player.speed(0)
+player.pu()
+player.shape("square")
+player.shapesize(0.5,5)
+player.color("#00ff00")
+player.seth(90)
+player.goto(-194,149)
+
+opponent=turtle.Turtle()
+opponent.speed(0)
+opponent.pu()
+opponent.shape("square")
+opponent.shapesize(0.5,5)
+opponent.color("#ff0000")
+opponent.seth(90)
+opponent.goto(194,149)
+
+score_pen=turtle.Turtle()
+score_pen.speed(0)
+score_pen.color("green")
+score_pen.pu()
+score_pen.goto(-195,210)
+score_pen.write("Score", False, align="left", font= ("Arial", 14, "normal"))
+score_pen.ht()
+
+
+
+
+def f():
+    player.fd(50)
+
+screen.onkey(f, "Up")
+screen.listen()
+
+def d():
+    player.bk(50)
+
+screen.onkey(d, "Down")
+screen.listen()
+
+
+ball=turtle.Turtle()
+ball.shape("sphere.gif")
+ball.color("blue")
+ball.shapesize(0.5,0.5)
+ball.pu()
+ball.goto(50,50)
+ball.speed(0)
+ball.dx=0.3
+ball.dy=-0.2
+
+#Score
+i=0
+player_score=turtle.Turtle()
+player_score.color("white")
+player_score.pu()
+player_score.goto(-130,210)
+player_score.write(i, False, align="left", font=("Arial", 14, "normal"))
+player_score.ht()
+
+game_over=turtle.Turtle()
+game_over.ht()
+game_over.color("magenta")
+
+def f():
+    player.fd(50)
+
+screen.onkey(f, "Up")
+screen.listen()
+
+def d():
+    player.bk(50)
+
+screen.onkey(d, "Down")
+screen.listen()
+
+def Collision(t1,t2):
+    if abs(t1.xcor()-t2.xcor())<25:
+        if abs(t1.ycor()-t2.ycor())<60:
+            return True
+        else:
+            return False
+    else:
+         return False
+
+def start_game():
+    while True:
+        global i
+        #move pong ball
+        ball.sety(ball.ycor() +ball.dy)
+        ball.setx(ball.xcor() +ball.dx)
+        screen.update()
+    
+
+        #check for bounce and redirect it
+        if ball.ycor()<-190:
+            ball.dy*=-1
+        if ball.ycor()>190:
+            ball.dy*=-1
+        if ball.xcor()>184:
+            ball.dx*=-1
+
+        if Collision(ball,player):
+            ball.dx*=-1
+            i+=10
+            player_score.clear()
+            player_score.write(i, False, align="left", font= ("Arial", 14, "normal"))
+            ball.dx+=0.01
+            ball.dy+=0.02
+       
+    
+        if ball.xcor()<-182:
+            game_over.write("Game Over", False, align="center", font=("Arial",35,"bold"))
+            break
+    
+        #move Al paddle (might speed up pong movement)
+        
+        y=ball.ycor()
+        y=y+opponent.speed()
+        opponent.sety(y)
+start_game()
+
